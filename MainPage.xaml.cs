@@ -39,7 +39,7 @@ namespace Calculator
             if (sender is Button button)
             {
                 if (EquationBlock.Text.Equals("FormatException") || EquationBlock.Text.Equals("OverflowException"))
-                    EquationBlock.Text = string.Empty;
+                    EquationBlock.Text = decimal.Zero.ToString();
                 switch (button.Content.ToString())
                 {
                     case "0":
@@ -96,12 +96,14 @@ namespace Calculator
 
         private void ClearEntry_Click(object sender, RoutedEventArgs e)
         {
-            EquationBlock.Text = string.Empty;
+            EquationBlock.Text = decimal.Zero.ToString();
+            if (HelperBlock.Text.Contains('='))
+                HelperBlock.Text = string.Empty;
         }
 
         private void Clear_Click(object sender, RoutedEventArgs e)
         {
-            EquationBlock.Text = string.Empty;
+            EquationBlock.Text = decimal.Zero.ToString();
             HelperBlock.Text = string.Empty;
         }
 
@@ -153,7 +155,7 @@ namespace Calculator
                     _equationAnalyzer.FirstNumber = Convert.ToDecimal(EquationBlock.Text);
                     _equationAnalyzer.Action = Action.Plus;
                     HelperBlock.Text = EquationBlock.Text + " +";
-                    EquationBlock.Text = string.Empty;
+                    EquationBlock.Text = decimal.Zero.ToString();
                 }
                 catch (FormatException)
                 {
@@ -182,7 +184,7 @@ namespace Calculator
                     _equationAnalyzer.FirstNumber = Convert.ToDecimal(EquationBlock.Text);
                     _equationAnalyzer.Action = Action.Minus;
                     HelperBlock.Text = EquationBlock.Text + " -";
-                    EquationBlock.Text = string.Empty;
+                    EquationBlock.Text = decimal.Zero.ToString();
                 }
                 catch (FormatException)
                 {
@@ -211,7 +213,7 @@ namespace Calculator
                     _equationAnalyzer.FirstNumber = Convert.ToDecimal(EquationBlock.Text);
                     _equationAnalyzer.Action = Action.Multiplication;
                     HelperBlock.Text = EquationBlock.Text + " *";
-                    EquationBlock.Text = string.Empty;
+                    EquationBlock.Text = decimal.Zero.ToString();
                 }
                 catch (FormatException)
                 {
@@ -240,7 +242,7 @@ namespace Calculator
                     _equationAnalyzer.FirstNumber = Convert.ToDecimal(EquationBlock.Text);
                     _equationAnalyzer.Action = Action.Division;
                     HelperBlock.Text = EquationBlock.Text + " /";
-                    EquationBlock.Text = string.Empty;
+                    EquationBlock.Text = decimal.Zero.ToString();
                 }
                 catch (FormatException)
                 {
@@ -379,6 +381,57 @@ namespace Calculator
                 if(!string.IsNullOrEmpty(EquationBlock.Text))
                 {
                     EquationBlock.Text += " ^ ";
+                }
+            }
+        }
+
+        private void PowerToTwo_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                _equationAnalyzer.FirstNumber = Convert.ToDecimal(EquationBlock.Text);
+                _equationAnalyzer.SecondNumber = 2m;
+                _equationAnalyzer.Action = Action.Power;
+                HelperBlock.Text = EquationBlock.Text + "^2";
+                EquationBlock.Text = decimal.Zero.ToString();
+            }
+            catch (FormatException)
+            {
+                HelperBlock.Text = string.Empty;
+                EquationBlock.Text = "FormatException";
+            }
+            catch (OverflowException)
+            {
+                HelperBlock.Text = string.Empty;
+                EquationBlock.Text = "OverflowException";
+            }
+        }
+
+        private void Percent_Click(object sender, RoutedEventArgs e)
+        {
+            if (EquationBlock.Text.Contains('^'))
+            {
+                Pow();
+                SetResult();
+            }
+            if (!string.IsNullOrEmpty(EquationBlock.Text) && string.IsNullOrEmpty(HelperBlock.Text))
+            {
+                try
+                {
+                    _equationAnalyzer.FirstNumber = Convert.ToDecimal(EquationBlock.Text);
+                    _equationAnalyzer.Action = Action.Percentage;
+                    HelperBlock.Text = EquationBlock.Text + " %";
+                    EquationBlock.Text = decimal.Zero.ToString();
+                }
+                catch (FormatException)
+                {
+                    HelperBlock.Text = string.Empty;
+                    EquationBlock.Text = "FormatException";
+                }
+                catch (OverflowException)
+                {
+                    HelperBlock.Text = string.Empty;
+                    EquationBlock.Text = "OverflowException";
                 }
             }
         }
