@@ -293,6 +293,10 @@ namespace Calculator
         private void SetResult()
         {
             EquationBlock.Text = _equationAnalyzer.Calculate().ToString();
+            if (EquationBlock.Text.Length > 10)
+                EquationBlock.FontSize = 50;
+            else
+                EquationBlock.FontSize = 80;
             _equationAnalyzer.Action = Action.None;
             _equationAnalyzer.FirstNumber = decimal.Zero;
             _equationAnalyzer.SecondNumber = decimal.Zero;
@@ -445,6 +449,13 @@ namespace Calculator
                 else
                     EquationBlock.Text = '-' + EquationBlock.Text;
             }
+        }
+
+        private void Sqrt_Click(object sender, RoutedEventArgs e)
+        {
+            _equationAnalyzer.FirstNumber = Convert.ToDecimal(EquationBlock.Text);
+            _equationAnalyzer.Action = Action.Root;
+            SetResult();
         }
     }
 }
