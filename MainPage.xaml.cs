@@ -435,5 +435,16 @@ namespace Calculator
                 }
             }
         }
+
+        private void InvertNumber_Click(object sender, RoutedEventArgs e)
+        {
+            if(!string.IsNullOrEmpty(EquationBlock.Text))
+            {
+                if (EquationBlock.Text.Contains('-'))
+                    EquationBlock.Text = EquationBlock.Text.Substring(1);
+                else
+                    EquationBlock.Text = '-' + EquationBlock.Text;
+            }
+        }
     }
 }
