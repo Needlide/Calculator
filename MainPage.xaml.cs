@@ -10,7 +10,7 @@ namespace Calculator
     /// </summary>
     public sealed partial class MainPage : Page
     {
-        EquationAnalyzer _equationAnalyzer = new EquationAnalyzer();
+        readonly EquationAnalyzer _equationAnalyzer = new EquationAnalyzer();
         public MainPage()
         {
             InitializeComponent();
@@ -107,15 +107,17 @@ namespace Calculator
 
         private void Dot_Click(object sender, RoutedEventArgs e)
         {
-            if(EquationBlock.Text.Length == 0)
-            {
-                EquationBlock.Text = "0.";
-            }
+            if(EquationBlock.Text.Length == 0) { EquationBlock.Text = "0."; }
             else if(!EquationBlock.Text.Contains(".")) { EquationBlock.Text += '.'; }
         }
 
         private void OneDivideX_Click(object sender, RoutedEventArgs e)
         {
+            if (EquationBlock.Text.Contains('^'))
+            {
+                Pow();
+                SetResult();
+            }
             if (!string.IsNullOrEmpty(EquationBlock.Text))
             {
                 try
@@ -139,6 +141,11 @@ namespace Calculator
 
         private void Plus_Click(object sender, RoutedEventArgs e)
         {
+            if (EquationBlock.Text.Contains('^'))
+            {
+                Pow();
+                SetResult();
+            }
             if (!string.IsNullOrEmpty(EquationBlock.Text) && string.IsNullOrEmpty(HelperBlock.Text))
             {
                 try
@@ -163,6 +170,11 @@ namespace Calculator
 
         private void Minus_Click(object sender, RoutedEventArgs e)
         {
+            if (EquationBlock.Text.Contains('^'))
+            {
+                Pow();
+                SetResult();
+            }
             if (!string.IsNullOrEmpty(EquationBlock.Text) && string.IsNullOrEmpty(HelperBlock.Text))
             {
                 try
@@ -187,6 +199,11 @@ namespace Calculator
 
         private void Multiplication_Click(object sender, RoutedEventArgs e)
         {
+            if (EquationBlock.Text.Contains('^'))
+            {
+                Pow();
+                SetResult();
+            }
             if (!string.IsNullOrEmpty(EquationBlock.Text) && string.IsNullOrEmpty(HelperBlock.Text))
             {
                 try
@@ -211,6 +228,11 @@ namespace Calculator
 
         private void Divide_Click(object sender, RoutedEventArgs e)
         {
+            if (EquationBlock.Text.Contains('^'))
+            {
+                Pow();
+                SetResult();
+            }
             if (!string.IsNullOrEmpty(EquationBlock.Text) && string.IsNullOrEmpty(HelperBlock.Text))
             {
                 try
@@ -235,16 +257,18 @@ namespace Calculator
 
         private void Equal_Click(object sender, RoutedEventArgs e)
         {
-            if(!string.IsNullOrEmpty(EquationBlock.Text) && _equationAnalyzer.Action != Action.None)
+            if(EquationBlock.Text.Contains('^'))
+            {
+                Pow();
+                SetResult();
+            }
+            else if(!string.IsNullOrEmpty(EquationBlock.Text) && _equationAnalyzer.Action != Action.None)
             {
                 try
                 {
                     _equationAnalyzer.SecondNumber = Convert.ToDecimal(EquationBlock.Text);
                     HelperBlock.Text += $" {EquationBlock.Text} =";
-                    EquationBlock.Text = _equationAnalyzer.Calculate().ToString();
-                    _equationAnalyzer.Action = Action.None;
-                    _equationAnalyzer.FirstNumber = decimal.Zero;
-                    _equationAnalyzer.SecondNumber = decimal.Zero;
+                    SetResult();
                 }
                 catch (FormatException)
                 {
@@ -255,6 +279,21 @@ namespace Calculator
                     EquationBlock.Text = "OverflowException";
                 }
             }
+        }
+
+        private void Pow()
+        {
+            _equationAnalyzer.Action = Action.Power;
+            _equationAnalyzer.FirstNumber = Convert.ToDecimal(EquationBlock.Text.Substring(0, EquationBlock.Text.IndexOf('^')));
+            _equationAnalyzer.SecondNumber = Convert.ToDecimal(EquationBlock.Text.Substring(EquationBlock.Text.IndexOf('^') + 1));
+        }
+
+        private void SetResult()
+        {
+            EquationBlock.Text = _equationAnalyzer.Calculate().ToString();
+            _equationAnalyzer.Action = Action.None;
+            _equationAnalyzer.FirstNumber = decimal.Zero;
+            _equationAnalyzer.SecondNumber = decimal.Zero;
         }
 
         private void page_KeyDown(object sender, Windows.UI.Xaml.Input.KeyRoutedEventArgs e)
@@ -293,8 +332,11 @@ namespace Calculator
                     break;
                 case Windows.System.VirtualKey.Number6:
                 case Windows.System.VirtualKey.NumberPad6:
-                    if (EquationBlock.Text.Equals("0")) { EquationBlock.Text = "6"; }
-                    else { EquationBlock.Text += "6"; }
+                    if (!EquationBlock.Text.Contains('^'))
+                    {
+                        if (EquationBlock.Text.Equals("0")) { EquationBlock.Text = "6"; }
+                        else { EquationBlock.Text += "6"; }
+                    }
                     break;
                 case Windows.System.VirtualKey.Number7:
                 case Windows.System.VirtualKey.NumberPad7:
@@ -311,6 +353,33 @@ namespace Calculator
                     if (EquationBlock.Text.Equals("0")) { EquationBlock.Text = "9"; }
                     else { EquationBlock.Text += "9"; }
                     break;
+                case Windows.System.VirtualKey.Decimal:
+                    if (EquationBlock.Text.Length == 0) { EquationBlock.Text = "0."; }
+                    else if (!EquationBlock.Text.Contains(".")) { EquationBlock.Text += '.'; }
+                    break;
+                case Windows.System.VirtualKey.Divide:
+                    Divide_Click(null, null);
+                    break;
+                case Windows.System.VirtualKey.Multiply:
+                    Multiplication_Click(null, null);
+                    break;
+                case Windows.System.VirtualKey.Subtract:
+                    Minus_Click(null, null);
+                    break;
+                case Windows.System.VirtualKey.Add:
+                    Plus_Click(null, null);
+                    break;
+            }
+        }
+
+        private void page_ProcessKeyboardAccelerators(UIElement sender, Windows.UI.Xaml.Input.ProcessKeyboardAcceleratorEventArgs args)
+        {
+            if(args.Key.Equals(Windows.System.VirtualKey.Number6) && args.Modifiers.Equals(Windows.System.VirtualKeyModifiers.Shift))
+            {
+                if(!string.IsNullOrEmpty(EquationBlock.Text))
+                {
+                    EquationBlock.Text += " ^ ";
+                }
             }
         }
     }

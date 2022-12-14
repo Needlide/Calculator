@@ -125,7 +125,7 @@ namespace Calculator
         {
             decimal result = _firstNumber;
 
-            for(int i = 0; i < _secondNumber; i++)
+            for(int i = 0; i < _secondNumber - 1; i++)
             {
                 result *= _firstNumber;
             }
