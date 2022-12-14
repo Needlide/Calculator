@@ -1,7 +1,10 @@
 ﻿using System;
 using System.Linq;
+using Windows.ApplicationModel.DataTransfer;
+using Windows.UI.Popups;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Controls.Primitives;
 
 namespace Calculator
 {
@@ -380,12 +383,25 @@ namespace Calculator
 
         private void page_ProcessKeyboardAccelerators(UIElement sender, Windows.UI.Xaml.Input.ProcessKeyboardAcceleratorEventArgs args)
         {
-            if(args.Key.Equals(Windows.System.VirtualKey.Number6) && args.Modifiers.Equals(Windows.System.VirtualKeyModifiers.Shift))
+            if (args.Key.Equals(Windows.System.VirtualKey.Number6) && args.Modifiers.Equals(Windows.System.VirtualKeyModifiers.Shift))
             {
-                if(!string.IsNullOrEmpty(EquationBlock.Text))
+                if (!string.IsNullOrEmpty(EquationBlock.Text))
                 {
                     EquationBlock.Text += " ^ ";
                 }
+            }
+            if (args.Key.Equals(Windows.System.VirtualKey.C) && args.Modifiers.Equals(Windows.System.VirtualKeyModifiers.Control))
+            {
+                if (!string.IsNullOrEmpty(EquationBlock.Text))
+                {
+                    DataPackage data = new DataPackage();
+                    data.SetText(EquationBlock.Text);
+                    Clipboard.SetContent(data);
+                }
+            }
+            if (args.Key.Equals(Windows.System.VirtualKey.V) && args.Modifiers.Equals(Windows.System.VirtualKeyModifiers.Control))
+            {
+                EquationBlock.Text = Clipboard.GetContent().GetTextAsync().AsTask().GetAwaiter().GetResult();
             }
         }
 
@@ -456,6 +472,18 @@ namespace Calculator
             _equationAnalyzer.FirstNumber = Convert.ToDecimal(EquationBlock.Text);
             _equationAnalyzer.Action = Action.Root;
             SetResult();
+        }
+
+        private void CopyFlyoutMenuItem_Click(object sender, RoutedEventArgs e)
+        {
+            DataPackage data = new DataPackage();
+            data.SetText(EquationBlock.Text);
+            Clipboard.SetContent(data);
+        }
+
+        private void EquationBlock_RightTapped(object sender, Windows.UI.Xaml.Input.RightTappedRoutedEventArgs e)
+        {
+            FlyoutBase.ShowAttachedFlyout((FrameworkElement)sender);
         }
     }
 }

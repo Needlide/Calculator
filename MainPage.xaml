@@ -16,7 +16,13 @@
             <RowDefinition Height=".15*"/>
             <RowDefinition/>
         </Grid.RowDefinitions>
-        <TextBlock x:Name="EquationBlock" Grid.Row="0" FontSize="80" Foreground="White" TextAlignment="Right" Margin="0, 0, 10, 0" Text="0"/>
+        <TextBlock x:Name="EquationBlock" Grid.Row="0" FontSize="80" Foreground="White" TextAlignment="Right" Margin="0, 0, 10, 0" Text="0" RightTapped="EquationBlock_RightTapped">
+            <FlyoutBase.AttachedFlyout>
+                <MenuFlyout Placement="RightEdgeAlignedBottom">
+                    <MenuFlyoutItem Text="Copy" Icon="Copy" Click="CopyFlyoutMenuItem_Click"/>
+                </MenuFlyout>
+            </FlyoutBase.AttachedFlyout>
+        </TextBlock>
         <TextBlock x:Name="HelperBlock" Grid.Row="1" FontSize="40" Foreground="White" TextAlignment="Right" Margin="0, 0, 10, 0"/>
         <Grid x:Name="PanelWithButtons" Grid.Row="2">
             <Grid.RowDefinitions>
