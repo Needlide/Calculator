@@ -18,6 +18,11 @@
             <FlyoutBase.AttachedFlyout>
                 <MenuFlyout Placement="RightEdgeAlignedBottom">
                     <MenuFlyoutItem Text="Copy" Icon="Copy" Click="CopyFlyoutMenuItem_Click"/>
+                    <MenuFlyoutItem Text="Appearance" Click="Appearance_Click">
+                        <MenuFlyoutItem.Icon>
+                            <FontIcon Glyph="&#xE790;"/>
+                        </MenuFlyoutItem.Icon>
+                    </MenuFlyoutItem>
                 </MenuFlyout>
             </FlyoutBase.AttachedFlyout>
         </TextBlock>
@@ -39,7 +44,7 @@
             </Grid.ColumnDefinitions>
             <Button Grid.Row="0" Grid.Column="0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Background="{ThemeResource SystemControlAccentDark2AcrylicElementAccentDark2MediumHighBrush}" Content="%" FontSize="28" Margin="2,2,2,2" Click="Percent_Click"/>
             <Button Grid.Row="1" Grid.Column="0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Background="{ThemeResource SystemControlAccentDark2AcrylicElementAccentDark2MediumHighBrush}" Content="1/x" FontSize="28" Margin="2,2,2,2" Click="OneDivideX_Click"/>
-            <Button Grid.Row="2" Grid.Column="0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Background="{ThemeResource SystemControlAcrylicElementBrush}" Content="7" FontSize="28" Margin="2,2,2,2" Click="Button_Click"/>
+            <Button Grid.Row="2" Grid.Column="0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Background="{ThemeResource SystemControlAcrylicElementBrush}" Content="7" FontSize="28" Margin="2,2,2,2" Click="Button_Click" Foreground="White"/>
             <Button Grid.Row="3" Grid.Column="0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Background="{ThemeResource SystemControlAcrylicElementBrush}" Content="4" FontSize="28" Margin="2,2,2,2" Click="Button_Click"/>
             <Button Grid.Row="4" Grid.Column="0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Background="{ThemeResource SystemControlAcrylicElementBrush}" Content="1" FontSize="28" Margin="2,2,2,2" Click="Button_Click"/>
             <Button Grid.Row="5" Grid.Column="0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Background="{ThemeResource SystemControlAcrylicElementBrush}" Content="+/-" FontSize="28" Margin="2,2,2,2" Click="InvertNumber_Click"/>

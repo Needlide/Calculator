@@ -23,12 +23,7 @@ namespace Calculator
 
         private void nvTopLevelNav_ItemInvoked(NavigationView sender, NavigationViewItemInvokedEventArgs args)
         {
-            if(args.IsSettingsInvoked)
-            {
-                nvTopLevelNav.IsBackButtonVisible = NavigationViewBackButtonVisible.Visible;
-                contentFrame.Navigate(typeof(SettingsPage));
-            }
-            else if(args.InvokedItem is NavigationViewItem nvi)
+            if(args.InvokedItem is NavigationViewItem nvi)
             {
                 switch(nvi.Tag)
                 {

@@ -8,7 +8,7 @@
     Background="{ThemeResource SystemControlAcrylicWindowBrush}">
 
     <Grid>
-        <NavigationView x:Name="nvTopLevelNav" IsTabStop="False" PaneDisplayMode="LeftMinimal" IsBackButtonVisible="Collapsed" Loaded="nvTopLevelNav_Loaded" ItemInvoked="nvTopLevelNav_ItemInvoked">
+        <NavigationView x:Name="nvTopLevelNav" IsTabStop="False" PaneDisplayMode="LeftMinimal" IsBackButtonVisible="Collapsed" IsSettingsVisible="False" Loaded="nvTopLevelNav_Loaded" ItemInvoked="nvTopLevelNav_ItemInvoked">
             <NavigationView.MenuItems>
                 <NavigationViewItemHeader Content="Calculator"/>
                 <NavigationViewItem Content="Standard" Tag="Standard_Page">

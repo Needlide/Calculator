@@ -1,0 +1,50 @@
+﻿<ContentDialog
+    x:Class="Calculator.Controls.AppearanceWindowControl"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:Calculator.Controls"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    Title="TITLE"
+    PrimaryButtonText="Apply"
+    SecondaryButtonText="Default"
+    PrimaryButtonClick="ContentDialog_PrimaryButtonClick"
+    SecondaryButtonClick="ContentDialog_SecondaryButtonClick" Loaded="ContentDialog_Loaded" Closing="ContentDialog_Closing">
+
+    <ScrollViewer>
+        <StackPanel>
+            <TextBlock Text="Appearance" FontSize="26" Margin="10,5,0,0"/>
+            <Grid HorizontalAlignment="Left" Margin="15,5,0,0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
+
+                <TextBlock Grid.Column="0" Text="Font size: " FontSize="20"/>
+                <TextBox x:Name="FontSizeBox" Grid.Column="1" Margin="10,0,0,0"/>
+            </Grid>
+
+            <ComboBox x:Name="FontFamilyComboBox" Header="Font family" FontSize="20" ItemsSource="{x:Bind FontFamily}" Width="313" DisplayMemberPath="Source" Margin="15,5,0,0"/>
+
+            <TextBlock Text="Font color: " FontSize="20" Margin="15,5,0,0"/>
+            <ColorPicker x:Name="FontColorPicker" ColorSpectrumShape="Box" IsColorPreviewVisible="True" HorizontalAlignment="Left" Margin="15,5,0,0"/>
+
+            <TextBlock Text="Background color: " FontSize="20" Margin="15,10,0,0"/>
+            <ColorPicker x:Name="BackgroundColorPicker" ColorSpectrumShape="Box" IsColorPreviewVisible="True" HorizontalAlignment="Left" Margin="15,5,0,0"/>
+
+            <TextBlock Text="Border color: " FontSize="20" Margin="15,10,0,0"/>
+            <ColorPicker x:Name="BorderColorPicker" ColorSpectrumShape="Box" IsColorPreviewVisible="True" HorizontalAlignment="Left" Margin="15,5,0,0"/>
+
+            <Grid HorizontalAlignment="Left" Margin="15,5,0,0" ToolTipService.ToolTip="Left, Top, Right, Bottom">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
+
+                <TextBlock Grid.Column="0" Text="Border thickness: " FontSize="20"/>
+                <TextBox x:Name="BorderThicknessBox" Grid.Column="1" Margin="10,0,0,0" Width="150"/>
+            </Grid>
+        </StackPanel>
+    </ScrollViewer>
+</ContentDialog>

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Calculator.Controls;
+using System;
 using System.Linq;
 using Windows.ApplicationModel.DataTransfer;
 using Windows.UI.Xaml;
@@ -354,6 +355,11 @@ namespace Calculator.Views
             FlyoutBase.ShowAttachedFlyout((FrameworkElement)sender);
         }
 
+        private void Appearance_Click(object sender, RoutedEventArgs e)
+        {
+            AppearanceWindowControl window = new AppearanceWindowControl(sender as Control);
+            _ = window.ShowAsync();
+        }
         #endregion
 
         #region Methods
@@ -498,5 +504,7 @@ namespace Calculator.Views
         }
 
         #endregion
+
+
     }
 }
