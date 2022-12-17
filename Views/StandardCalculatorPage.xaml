@@ -1,9 +1,8 @@
 ﻿<Page
     x:Class="Calculator.Views.StandardCalculatorPage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:local="using:Calculator.Views"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
     Background="{ThemeResource SystemControlAcrylicWindowBrush}" SizeChanged="page_SizeChanged" KeyDown="page_KeyDown" ProcessKeyboardAccelerators="page_ProcessKeyboardAccelerators">
@@ -14,7 +13,7 @@
             <RowDefinition Height=".15*"/>
             <RowDefinition/>
         </Grid.RowDefinitions>
-        <TextBlock x:Name="EquationBlock" Grid.Row="0" FontSize="80" Foreground="White" TextAlignment="Right" Margin="0, 0, 10, 0" Text="0" RightTapped="EquationBlock_RightTapped">
+        <TextBlock x:Name="EquationBlock" Grid.Row="0" FontSize="80" Foreground="White" TextAlignment="Right" Margin="0, 0, 10, 0" Text="0" RightTapped="Element_RightTapped">
             <FlyoutBase.AttachedFlyout>
                 <MenuFlyout Placement="RightEdgeAlignedBottom">
                     <MenuFlyoutItem Text="Copy" Icon="Copy" Click="CopyFlyoutMenuItem_Click"/>
@@ -26,7 +25,17 @@
                 </MenuFlyout>
             </FlyoutBase.AttachedFlyout>
         </TextBlock>
-        <TextBlock x:Name="HelperBlock" Grid.Row="1" FontSize="40" Foreground="White" TextAlignment="Right" Margin="0, 0, 10, 0"/>
+        <TextBlock x:Name="HelperBlock" Grid.Row="1" FontSize="40" Foreground="White" TextAlignment="Right" Margin="0, 0, 10, 0" RightTapped="Element_RightTapped">
+            <FlyoutBase.AttachedFlyout>
+                <MenuFlyout Placement="RightEdgeAlignedBottom">
+                    <MenuFlyoutItem Text="Appearance" Click="Appearance_Click">
+                        <MenuFlyoutItem.Icon>
+                            <FontIcon Glyph="&#xE790;"/>
+                        </MenuFlyoutItem.Icon>
+                    </MenuFlyoutItem>
+                </MenuFlyout>
+            </FlyoutBase.AttachedFlyout>
+        </TextBlock>
         <Grid x:Name="PanelWithButtons" Grid.Row="2">
             <Grid.RowDefinitions>
                 <RowDefinition/>
@@ -42,30 +51,270 @@
                 <ColumnDefinition/>
                 <ColumnDefinition/>
             </Grid.ColumnDefinitions>
-            <Button Grid.Row="0" Grid.Column="0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Background="{ThemeResource SystemControlAccentDark2AcrylicElementAccentDark2MediumHighBrush}" Content="%" FontSize="28" Margin="2,2,2,2" Click="Percent_Click"/>
-            <Button Grid.Row="1" Grid.Column="0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Background="{ThemeResource SystemControlAccentDark2AcrylicElementAccentDark2MediumHighBrush}" Content="1/x" FontSize="28" Margin="2,2,2,2" Click="OneDivideX_Click"/>
-            <Button Grid.Row="2" Grid.Column="0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Background="{ThemeResource SystemControlAcrylicElementBrush}" Content="7" FontSize="28" Margin="2,2,2,2" Click="Button_Click" Foreground="White"/>
-            <Button Grid.Row="3" Grid.Column="0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Background="{ThemeResource SystemControlAcrylicElementBrush}" Content="4" FontSize="28" Margin="2,2,2,2" Click="Button_Click"/>
-            <Button Grid.Row="4" Grid.Column="0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Background="{ThemeResource SystemControlAcrylicElementBrush}" Content="1" FontSize="28" Margin="2,2,2,2" Click="Button_Click"/>
-            <Button Grid.Row="5" Grid.Column="0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Background="{ThemeResource SystemControlAcrylicElementBrush}" Content="+/-" FontSize="28" Margin="2,2,2,2" Click="InvertNumber_Click"/>
-            <Button Grid.Row="0" Grid.Column="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Background="{ThemeResource SystemControlAccentDark2AcrylicElementAccentDark2MediumHighBrush}" Content="CE" FontSize="28" Margin="2,2,2,2" Click="ClearEntry_Click"/>
-            <Button Grid.Row="1" Grid.Column="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Background="{ThemeResource SystemControlAccentDark2AcrylicElementAccentDark2MediumHighBrush}" Content="x^2" FontSize="28" Margin="2,2,2,2" Click="PowerToTwo_Click"/>
-            <Button Grid.Row="2" Grid.Column="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Background="{ThemeResource SystemControlAcrylicElementBrush}" Content="8" FontSize="28" Margin="2,2,2,2" Click="Button_Click"/>
-            <Button Grid.Row="3" Grid.Column="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Background="{ThemeResource SystemControlAcrylicElementBrush}" Content="5" FontSize="28" Margin="2,2,2,2" Click="Button_Click"/>
-            <Button Grid.Row="4" Grid.Column="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Background="{ThemeResource SystemControlAcrylicElementBrush}" Content="2" FontSize="28" Margin="2,2,2,2" Click="Button_Click"/>
-            <Button Grid.Row="5" Grid.Column="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Background="{ThemeResource SystemControlAcrylicElementBrush}" Content="0" FontSize="28" Margin="2,2,2,2" Click="Button_Click"/>
-            <Button Grid.Row="0" Grid.Column="2" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Background="{ThemeResource SystemControlAccentDark2AcrylicElementAccentDark2MediumHighBrush}" Content="C" FontSize="28" Margin="2,2,2,2" Click="Clear_Click"/>
-            <Button Grid.Row="1" Grid.Column="2" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Background="{ThemeResource SystemControlAccentDark2AcrylicElementAccentDark2MediumHighBrush}" Content="sqrt()" FontSize="28" Margin="2,2,2,2" Click="Sqrt_Click"/>
-            <Button Grid.Row="2" Grid.Column="2" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Background="{ThemeResource SystemControlAcrylicElementBrush}" Content="9" FontSize="28" Margin="2,2,2,2" Click="Button_Click"/>
-            <Button Grid.Row="3" Grid.Column="2" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Background="{ThemeResource SystemControlAcrylicElementBrush}" Content="6" FontSize="28" Margin="2,2,2,2" Click="Button_Click"/>
-            <Button Grid.Row="4" Grid.Column="2" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Background="{ThemeResource SystemControlAcrylicElementBrush}" Content="3" FontSize="28" Margin="2,2,2,2" Click="Button_Click"/>
-            <Button Grid.Row="5" Grid.Column="2" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Background="{ThemeResource SystemControlAcrylicElementBrush}" Content="." FontSize="28" Margin="2,2,2,2" Click="Dot_Click"/>
-            <Button Grid.Row="0" Grid.Column="3" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Background="{ThemeResource SystemControlAccentDark2AcrylicElementAccentDark2MediumHighBrush}" Content="&lt;=" FontSize="28" Margin="2,2,2,2" Click="BackspaceButton_Click"/>
-            <Button Grid.Row="1" Grid.Column="3" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Background="{ThemeResource SystemControlAccentDark2AcrylicElementAccentDark2MediumHighBrush}" Content="/" FontSize="28" Margin="2,2,2,2" Click="Divide_Click"/>
-            <Button Grid.Row="2" Grid.Column="3" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Background="{ThemeResource SystemControlAccentDark2AcrylicElementAccentDark2MediumHighBrush}" Content="*" FontSize="28" Margin="2,2,2,2" Click="Multiplication_Click"/>
-            <Button Grid.Row="3" Grid.Column="3" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Background="{ThemeResource SystemControlAccentDark2AcrylicElementAccentDark2MediumHighBrush}" Content="-" FontSize="28" Margin="2,2,2,2" Click="Minus_Click"/>
-            <Button Grid.Row="4" Grid.Column="3" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Background="{ThemeResource SystemControlAccentDark2AcrylicElementAccentDark2MediumHighBrush}" Content="+" FontSize="28" Margin="2,2,2,2" Click="Plus_Click"/>
-            <Button Grid.Row="5" Grid.Column="3" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Background="{ThemeResource SystemControlAccentDark2AcrylicElementAccentDark2MediumHighBrush}" Content="=" FontSize="28" Margin="2,2,2,2" Click="Equal_Click"/>
+            <Button Grid.Row="0" Grid.Column="0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Background="{ThemeResource SystemControlAccentDark2AcrylicElementAccentDark2MediumHighBrush}" Content="%" FontSize="28" Margin="2,2,2,2" Click="Percent_Click" RightTapped="Element_RightTapped">
+                <FlyoutBase.AttachedFlyout>
+                    <MenuFlyout Placement="RightEdgeAlignedBottom">
+                        <MenuFlyoutItem Text="Appearance" Click="Appearance_Click">
+                            <MenuFlyoutItem.Icon>
+                                <FontIcon Glyph="&#xE790;"/>
+                            </MenuFlyoutItem.Icon>
+                        </MenuFlyoutItem>
+                    </MenuFlyout>
+                </FlyoutBase.AttachedFlyout>
+            </Button>
+            <Button Grid.Row="1" Grid.Column="0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Background="{ThemeResource SystemControlAccentDark2AcrylicElementAccentDark2MediumHighBrush}" Content="1/x" FontSize="28" Margin="2,2,2,2" Click="OneDivideX_Click" RightTapped="Element_RightTapped">
+                <FlyoutBase.AttachedFlyout>
+                    <MenuFlyout Placement="RightEdgeAlignedBottom">
+                        <MenuFlyoutItem Text="Appearance" Click="Appearance_Click">
+                            <MenuFlyoutItem.Icon>
+                                <FontIcon Glyph="&#xE790;"/>
+                            </MenuFlyoutItem.Icon>
+                        </MenuFlyoutItem>
+                    </MenuFlyout>
+                </FlyoutBase.AttachedFlyout>
+            </Button>
+            <Button Grid.Row="2" Grid.Column="0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Background="{ThemeResource SystemControlAcrylicElementBrush}" Content="7" FontSize="28" Margin="2,2,2,2" Click="Button_Click" RightTapped="Element_RightTapped">
+                <FlyoutBase.AttachedFlyout>
+                    <MenuFlyout Placement="RightEdgeAlignedBottom">
+                        <MenuFlyoutItem Text="Appearance" Click="Appearance_Click">
+                            <MenuFlyoutItem.Icon>
+                                <FontIcon Glyph="&#xE790;"/>
+                            </MenuFlyoutItem.Icon>
+                        </MenuFlyoutItem>
+                    </MenuFlyout>
+                </FlyoutBase.AttachedFlyout>
+            </Button>
+            <Button Grid.Row="3" Grid.Column="0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Background="{ThemeResource SystemControlAcrylicElementBrush}" Content="4" FontSize="28" Margin="2,2,2,2" Click="Button_Click" RightTapped="Element_RightTapped">
+                <FlyoutBase.AttachedFlyout>
+                    <MenuFlyout Placement="RightEdgeAlignedBottom">
+                        <MenuFlyoutItem Text="Appearance" Click="Appearance_Click">
+                            <MenuFlyoutItem.Icon>
+                                <FontIcon Glyph="&#xE790;"/>
+                            </MenuFlyoutItem.Icon>
+                        </MenuFlyoutItem>
+                    </MenuFlyout>
+                </FlyoutBase.AttachedFlyout>
+            </Button>
+            <Button Grid.Row="4" Grid.Column="0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Background="{ThemeResource SystemControlAcrylicElementBrush}" Content="1" FontSize="28" Margin="2,2,2,2" Click="Button_Click" RightTapped="Element_RightTapped">
+                <FlyoutBase.AttachedFlyout>
+                    <MenuFlyout Placement="RightEdgeAlignedBottom">
+                        <MenuFlyoutItem Text="Appearance" Click="Appearance_Click">
+                            <MenuFlyoutItem.Icon>
+                                <FontIcon Glyph="&#xE790;"/>
+                            </MenuFlyoutItem.Icon>
+                        </MenuFlyoutItem>
+                    </MenuFlyout>
+                </FlyoutBase.AttachedFlyout>
+            </Button>
+            <Button Grid.Row="5" Grid.Column="0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Background="{ThemeResource SystemControlAcrylicElementBrush}" Content="+/-" FontSize="28" Margin="2,2,2,2" Click="InvertNumber_Click" RightTapped="Element_RightTapped">
+                <FlyoutBase.AttachedFlyout>
+                    <MenuFlyout Placement="RightEdgeAlignedBottom">
+                        <MenuFlyoutItem Text="Appearance" Click="Appearance_Click">
+                            <MenuFlyoutItem.Icon>
+                                <FontIcon Glyph="&#xE790;"/>
+                            </MenuFlyoutItem.Icon>
+                        </MenuFlyoutItem>
+                    </MenuFlyout>
+                </FlyoutBase.AttachedFlyout>
+            </Button>
+            <Button Grid.Row="0" Grid.Column="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Background="{ThemeResource SystemControlAccentDark2AcrylicElementAccentDark2MediumHighBrush}" Content="CE" FontSize="28" Margin="2,2,2,2" Click="ClearEntry_Click" RightTapped="Element_RightTapped">
+                <FlyoutBase.AttachedFlyout>
+                    <MenuFlyout Placement="RightEdgeAlignedBottom">
+                        <MenuFlyoutItem Text="Appearance" Click="Appearance_Click">
+                            <MenuFlyoutItem.Icon>
+                                <FontIcon Glyph="&#xE790;"/>
+                            </MenuFlyoutItem.Icon>
+                        </MenuFlyoutItem>
+                    </MenuFlyout>
+                </FlyoutBase.AttachedFlyout>
+            </Button>
+            <Button Grid.Row="1" Grid.Column="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Background="{ThemeResource SystemControlAccentDark2AcrylicElementAccentDark2MediumHighBrush}" Content="x^2" FontSize="28" Margin="2,2,2,2" Click="PowerToTwo_Click" RightTapped="Element_RightTapped">
+                <FlyoutBase.AttachedFlyout>
+                    <MenuFlyout Placement="RightEdgeAlignedBottom">
+                        <MenuFlyoutItem Text="Appearance" Click="Appearance_Click">
+                            <MenuFlyoutItem.Icon>
+                                <FontIcon Glyph="&#xE790;"/>
+                            </MenuFlyoutItem.Icon>
+                        </MenuFlyoutItem>
+                    </MenuFlyout>
+                </FlyoutBase.AttachedFlyout>
+            </Button>
+            <Button Grid.Row="2" Grid.Column="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Background="{ThemeResource SystemControlAcrylicElementBrush}" Content="8" FontSize="28" Margin="2,2,2,2" Click="Button_Click" RightTapped="Element_RightTapped">
+                <FlyoutBase.AttachedFlyout>
+                    <MenuFlyout Placement="RightEdgeAlignedBottom">
+                        <MenuFlyoutItem Text="Appearance" Click="Appearance_Click">
+                            <MenuFlyoutItem.Icon>
+                                <FontIcon Glyph="&#xE790;"/>
+                            </MenuFlyoutItem.Icon>
+                        </MenuFlyoutItem>
+                    </MenuFlyout>
+                </FlyoutBase.AttachedFlyout>
+            </Button>
+            <Button Grid.Row="3" Grid.Column="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Background="{ThemeResource SystemControlAcrylicElementBrush}" Content="5" FontSize="28" Margin="2,2,2,2" Click="Button_Click" RightTapped="Element_RightTapped">
+                <FlyoutBase.AttachedFlyout>
+                    <MenuFlyout Placement="RightEdgeAlignedBottom">
+                        <MenuFlyoutItem Text="Appearance" Click="Appearance_Click">
+                            <MenuFlyoutItem.Icon>
+                                <FontIcon Glyph="&#xE790;"/>
+                            </MenuFlyoutItem.Icon>
+                        </MenuFlyoutItem>
+                    </MenuFlyout>
+                </FlyoutBase.AttachedFlyout>
+            </Button>
+            <Button Grid.Row="4" Grid.Column="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Background="{ThemeResource SystemControlAcrylicElementBrush}" Content="2" FontSize="28" Margin="2,2,2,2" Click="Button_Click" RightTapped="Element_RightTapped">
+                <FlyoutBase.AttachedFlyout>
+                    <MenuFlyout Placement="RightEdgeAlignedBottom">
+                        <MenuFlyoutItem Text="Appearance" Click="Appearance_Click">
+                            <MenuFlyoutItem.Icon>
+                                <FontIcon Glyph="&#xE790;"/>
+                            </MenuFlyoutItem.Icon>
+                        </MenuFlyoutItem>
+                    </MenuFlyout>
+                </FlyoutBase.AttachedFlyout>
+            </Button>
+            <Button Grid.Row="5" Grid.Column="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Background="{ThemeResource SystemControlAcrylicElementBrush}" Content="0" FontSize="28" Margin="2,2,2,2" Click="Button_Click" RightTapped="Element_RightTapped">
+                <FlyoutBase.AttachedFlyout>
+                    <MenuFlyout Placement="RightEdgeAlignedBottom">
+                        <MenuFlyoutItem Text="Appearance" Click="Appearance_Click">
+                            <MenuFlyoutItem.Icon>
+                                <FontIcon Glyph="&#xE790;"/>
+                            </MenuFlyoutItem.Icon>
+                        </MenuFlyoutItem>
+                    </MenuFlyout>
+                </FlyoutBase.AttachedFlyout>
+            </Button>
+            <Button Grid.Row="0" Grid.Column="2" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Background="{ThemeResource SystemControlAccentDark2AcrylicElementAccentDark2MediumHighBrush}" Content="C" FontSize="28" Margin="2,2,2,2" Click="Clear_Click" RightTapped="Element_RightTapped">
+                <FlyoutBase.AttachedFlyout>
+                    <MenuFlyout Placement="RightEdgeAlignedBottom">
+                        <MenuFlyoutItem Text="Appearance" Click="Appearance_Click">
+                            <MenuFlyoutItem.Icon>
+                                <FontIcon Glyph="&#xE790;"/>
+                            </MenuFlyoutItem.Icon>
+                        </MenuFlyoutItem>
+                    </MenuFlyout>
+                </FlyoutBase.AttachedFlyout>
+            </Button>
+            <Button Grid.Row="1" Grid.Column="2" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Background="{ThemeResource SystemControlAccentDark2AcrylicElementAccentDark2MediumHighBrush}" Content="sqrt()" FontSize="28" Margin="2,2,2,2" Click="Sqrt_Click" RightTapped="Element_RightTapped">
+                <FlyoutBase.AttachedFlyout>
+                    <MenuFlyout Placement="RightEdgeAlignedBottom">
+                        <MenuFlyoutItem Text="Appearance" Click="Appearance_Click">
+                            <MenuFlyoutItem.Icon>
+                                <FontIcon Glyph="&#xE790;"/>
+                            </MenuFlyoutItem.Icon>
+                        </MenuFlyoutItem>
+                    </MenuFlyout>
+                </FlyoutBase.AttachedFlyout>
+            </Button>
+            <Button Grid.Row="2" Grid.Column="2" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Background="{ThemeResource SystemControlAcrylicElementBrush}" Content="9" FontSize="28" Margin="2,2,2,2" Click="Button_Click" RightTapped="Element_RightTapped">
+                <FlyoutBase.AttachedFlyout>
+                    <MenuFlyout Placement="RightEdgeAlignedBottom">
+                        <MenuFlyoutItem Text="Appearance" Click="Appearance_Click">
+                            <MenuFlyoutItem.Icon>
+                                <FontIcon Glyph="&#xE790;"/>
+                            </MenuFlyoutItem.Icon>
+                        </MenuFlyoutItem>
+                    </MenuFlyout>
+                </FlyoutBase.AttachedFlyout>
+            </Button>
+            <Button Grid.Row="3" Grid.Column="2" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Background="{ThemeResource SystemControlAcrylicElementBrush}" Content="6" FontSize="28" Margin="2,2,2,2" Click="Button_Click" RightTapped="Element_RightTapped">
+                <FlyoutBase.AttachedFlyout>
+                    <MenuFlyout Placement="RightEdgeAlignedBottom">
+                        <MenuFlyoutItem Text="Appearance" Click="Appearance_Click">
+                            <MenuFlyoutItem.Icon>
+                                <FontIcon Glyph="&#xE790;"/>
+                            </MenuFlyoutItem.Icon>
+                        </MenuFlyoutItem>
+                    </MenuFlyout>
+                </FlyoutBase.AttachedFlyout>
+            </Button>
+            <Button Grid.Row="4" Grid.Column="2" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Background="{ThemeResource SystemControlAcrylicElementBrush}" Content="3" FontSize="28" Margin="2,2,2,2" Click="Button_Click" RightTapped="Element_RightTapped">
+                <FlyoutBase.AttachedFlyout>
+                    <MenuFlyout Placement="RightEdgeAlignedBottom">
+                        <MenuFlyoutItem Text="Appearance" Click="Appearance_Click">
+                            <MenuFlyoutItem.Icon>
+                                <FontIcon Glyph="&#xE790;"/>
+                            </MenuFlyoutItem.Icon>
+                        </MenuFlyoutItem>
+                    </MenuFlyout>
+                </FlyoutBase.AttachedFlyout>
+            </Button>
+            <Button Grid.Row="5" Grid.Column="2" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Background="{ThemeResource SystemControlAcrylicElementBrush}" Content="." FontSize="28" Margin="2,2,2,2" Click="Dot_Click" RightTapped="Element_RightTapped">
+                <FlyoutBase.AttachedFlyout>
+                    <MenuFlyout Placement="RightEdgeAlignedBottom">
+                        <MenuFlyoutItem Text="Appearance" Click="Appearance_Click">
+                            <MenuFlyoutItem.Icon>
+                                <FontIcon Glyph="&#xE790;"/>
+                            </MenuFlyoutItem.Icon>
+                        </MenuFlyoutItem>
+                    </MenuFlyout>
+                </FlyoutBase.AttachedFlyout>
+            </Button>
+            <Button Grid.Row="0" Grid.Column="3" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Background="{ThemeResource SystemControlAccentDark2AcrylicElementAccentDark2MediumHighBrush}" Content="&lt;=" FontSize="28" Margin="2,2,2,2" Click="BackspaceButton_Click" RightTapped="Element_RightTapped">
+                <FlyoutBase.AttachedFlyout>
+                    <MenuFlyout Placement="RightEdgeAlignedBottom">
+                        <MenuFlyoutItem Text="Appearance" Click="Appearance_Click">
+                            <MenuFlyoutItem.Icon>
+                                <FontIcon Glyph="&#xE790;"/>
+                            </MenuFlyoutItem.Icon>
+                        </MenuFlyoutItem>
+                    </MenuFlyout>
+                </FlyoutBase.AttachedFlyout>
+            </Button>
+            <Button Grid.Row="1" Grid.Column="3" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Background="{ThemeResource SystemControlAccentDark2AcrylicElementAccentDark2MediumHighBrush}" Content="/" FontSize="28" Margin="2,2,2,2" Click="Divide_Click" RightTapped="Element_RightTapped">
+                <FlyoutBase.AttachedFlyout>
+                    <MenuFlyout Placement="RightEdgeAlignedBottom">
+                        <MenuFlyoutItem Text="Appearance" Click="Appearance_Click">
+                            <MenuFlyoutItem.Icon>
+                                <FontIcon Glyph="&#xE790;"/>
+                            </MenuFlyoutItem.Icon>
+                        </MenuFlyoutItem>
+                    </MenuFlyout>
+                </FlyoutBase.AttachedFlyout>
+            </Button>
+            <Button Grid.Row="2" Grid.Column="3" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Background="{ThemeResource SystemControlAccentDark2AcrylicElementAccentDark2MediumHighBrush}" Content="*" FontSize="28" Margin="2,2,2,2" Click="Multiplication_Click" RightTapped="Element_RightTapped">
+                <FlyoutBase.AttachedFlyout>
+                    <MenuFlyout Placement="RightEdgeAlignedBottom">
+                        <MenuFlyoutItem Text="Appearance" Click="Appearance_Click">
+                            <MenuFlyoutItem.Icon>
+                                <FontIcon Glyph="&#xE790;"/>
+                            </MenuFlyoutItem.Icon>
+                        </MenuFlyoutItem>
+                    </MenuFlyout>
+                </FlyoutBase.AttachedFlyout>
+            </Button>
+            <Button Grid.Row="3" Grid.Column="3" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Background="{ThemeResource SystemControlAccentDark2AcrylicElementAccentDark2MediumHighBrush}" Content="-" FontSize="28" Margin="2,2,2,2" Click="Minus_Click" RightTapped="Element_RightTapped">
+                <FlyoutBase.AttachedFlyout>
+                    <MenuFlyout Placement="RightEdgeAlignedBottom">
+                        <MenuFlyoutItem Text="Appearance" Click="Appearance_Click">
+                            <MenuFlyoutItem.Icon>
+                                <FontIcon Glyph="&#xE790;"/>
+                            </MenuFlyoutItem.Icon>
+                        </MenuFlyoutItem>
+                    </MenuFlyout>
+                </FlyoutBase.AttachedFlyout>
+            </Button>
+            <Button Grid.Row="4" Grid.Column="3" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Background="{ThemeResource SystemControlAccentDark2AcrylicElementAccentDark2MediumHighBrush}" Content="+" FontSize="28" Margin="2,2,2,2" Click="Plus_Click" RightTapped="Element_RightTapped">
+                <FlyoutBase.AttachedFlyout>
+                    <MenuFlyout Placement="RightEdgeAlignedBottom">
+                        <MenuFlyoutItem Text="Appearance" Click="Appearance_Click">
+                            <MenuFlyoutItem.Icon>
+                                <FontIcon Glyph="&#xE790;"/>
+                            </MenuFlyoutItem.Icon>
+                        </MenuFlyoutItem>
+                    </MenuFlyout>
+                </FlyoutBase.AttachedFlyout>
+            </Button>
+            <Button Grid.Row="5" Grid.Column="3" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Background="{ThemeResource SystemControlAccentDark2AcrylicElementAccentDark2MediumHighBrush}" Content="=" FontSize="28" Margin="2,2,2,2" Click="Equal_Click" RightTapped="Element_RightTapped">
+                <FlyoutBase.AttachedFlyout>
+                    <MenuFlyout Placement="RightEdgeAlignedBottom">
+                        <MenuFlyoutItem Text="Appearance" Click="Appearance_Click">
+                            <MenuFlyoutItem.Icon>
+                                <FontIcon Glyph="&#xE790;"/>
+                            </MenuFlyoutItem.Icon>
+                        </MenuFlyoutItem>
+                    </MenuFlyout>
+                </FlyoutBase.AttachedFlyout>
+            </Button>
         </Grid>
     </Grid>
 </Page>

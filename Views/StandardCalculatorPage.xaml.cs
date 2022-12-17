@@ -15,6 +15,8 @@ namespace Calculator.Views
     {
         #region Fields
         readonly EquationAnalyzer _equationAnalyzer = new EquationAnalyzer();
+        Button invokerButton;
+        TextBlock invokerTextBlock;
         #endregion
 
         #region Constructor
@@ -350,15 +352,29 @@ namespace Calculator.Views
             Clipboard.SetContent(data);
         }
 
-        private void EquationBlock_RightTapped(object sender, Windows.UI.Xaml.Input.RightTappedRoutedEventArgs e)
+        private void Element_RightTapped(object sender, Windows.UI.Xaml.Input.RightTappedRoutedEventArgs e)
         {
+            if (sender.GetType() == typeof(Button))
+                invokerButton = sender as Button;
+            else if (sender.GetType() == typeof(TextBlock))
+                invokerTextBlock = sender as TextBlock;
             FlyoutBase.ShowAttachedFlyout((FrameworkElement)sender);
         }
 
-        private void Appearance_Click(object sender, RoutedEventArgs e)
+        private async void Appearance_Click(object sender, RoutedEventArgs e)
         {
-            AppearanceWindowControl window = new AppearanceWindowControl(sender as Control);
-            _ = window.ShowAsync();
+            if (invokerButton != null)
+            {
+                AppearanceWindowControl window = new AppearanceWindowControl(invokerButton);
+                window.XamlRoot = XamlRoot;
+                await window.ShowAsync();
+            }
+            else if(invokerTextBlock != null)
+            {
+                AppearanceWindowControl window = new AppearanceWindowControl(invokerTextBlock);
+                window.XamlRoot = XamlRoot;
+                await window.ShowAsync();
+            }
         }
         #endregion
 

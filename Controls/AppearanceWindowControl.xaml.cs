@@ -1,28 +1,35 @@
-﻿using System;
+﻿using Microsoft.Graphics.Canvas.Text;
+using System;
 using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Controls.Primitives;
-using Windows.UI.Xaml.Data;
-using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
-using Windows.UI.Xaml.Navigation;
 
 namespace Calculator.Controls
 {
     public sealed partial class AppearanceWindowControl : ContentDialog
     {
         readonly Control invoker;
+        readonly TextBlock textBlock;
+
         public AppearanceWindowControl(Control invoker)
         {
             InitializeComponent();
             this.invoker = invoker;
+            DefaultButton = ContentDialogButton.Primary;
             Title = invoker.GetType().Name;
+            FontFamilyComboBox.ItemsSource = SetComboBoxSource();
+        }
+
+        public AppearanceWindowControl(TextBlock textBlock)
+        {
+            InitializeComponent();
+            this.textBlock = textBlock;
+            Title = textBlock.GetType().Name;
+            FontFamilyComboBox.ItemsSource = SetComboBoxSource();
+            BackgroundColorPicker.Visibility = Visibility.Collapsed;
+            BorderColorPicker.Visibility = Visibility.Collapsed;
+            BorderThicknessBox.Visibility = Visibility.Collapsed;
         }
 
         private void ContentDialog_PrimaryButtonClick(ContentDialog sender, ContentDialogButtonClickEventArgs args)
@@ -40,36 +47,28 @@ namespace Calculator.Controls
             LoadAppearance();
         }
 
-        private void ContentDialog_Closing(ContentDialog sender, ContentDialogClosingEventArgs args)
-        {
-            ApplyAppearance();
-        }
-
         private void LoadAppearance()
         {
             if (invoker != null)
             {
                 FontSizeBox.Text = invoker.FontSize.ToString();
-                FontFamilyComboBox.SelectedItem = invoker.FontFamily.ToString();
+
                 try
                 {
-                    string ForegroundBrushColorWithoutHash = invoker.Foreground.ToString().Substring(1);
-                    FontColorPicker.Color = Windows.UI.Color.FromArgb(Convert.ToByte(ForegroundBrushColorWithoutHash.Substring(0, 2), 16),
-                    Convert.ToByte(ForegroundBrushColorWithoutHash.Substring(2, 2), 16),
-                    Convert.ToByte(ForegroundBrushColorWithoutHash.Substring(4, 2), 16),
-                    Convert.ToByte(ForegroundBrushColorWithoutHash.Substring(6, 2), 16));
+                    for (int i = 0; i < FontFamilyComboBox.Items.Count; i++)
+                    {
+                        FontFamily family = FontFamilyComboBox.Items[i] as FontFamily;
+                        if (family.Source.Equals(invoker.FontFamily.Source))
+                            FontFamilyComboBox.SelectedIndex = i;
+                    }
+                    if (invoker.Foreground is SolidColorBrush fontBrush)
+                        FontColorPicker.Color = fontBrush.Color;
 
-                    string BackgroundBrushColorWithoutHash = invoker.Background.ToString().Substring(1);
-                    BackgroundColorPicker.Color = Windows.UI.Color.FromArgb(Convert.ToByte(BackgroundBrushColorWithoutHash.Substring(0, 2), 16),
-                    Convert.ToByte(BackgroundBrushColorWithoutHash.Substring(2, 2), 16),
-                    Convert.ToByte(BackgroundBrushColorWithoutHash.Substring(4, 2), 16),
-                    Convert.ToByte(BackgroundBrushColorWithoutHash.Substring(6, 2), 16));
+                    if (invoker.Background is SolidColorBrush backgroundBrush)
+                        BackgroundColorPicker.Color = backgroundBrush.Color;
 
-                    string BorderBrushColorWithoutHash = invoker.BorderBrush.ToString().Substring(1);
-                    BorderColorPicker.Color = Windows.UI.Color.FromArgb(Convert.ToByte(BorderBrushColorWithoutHash.Substring(0, 2), 16),
-                    Convert.ToByte(BorderBrushColorWithoutHash.Substring(2, 2), 16),
-                    Convert.ToByte(BorderBrushColorWithoutHash.Substring(4, 2), 16),
-                    Convert.ToByte(BorderBrushColorWithoutHash.Substring(6, 2), 16));
+                    if (invoker.BorderBrush is SolidColorBrush borderBrush)
+                        BorderColorPicker.Color = borderBrush.Color;
                 }
                 catch { }
 
@@ -78,6 +77,22 @@ namespace Calculator.Controls
                 + invoker.BorderThickness.Right.ToString() + ','
                 + invoker.BorderThickness.Bottom;
 
+            }
+            else if (textBlock != null)
+            {
+                FontSizeBox.Text = textBlock.FontSize.ToString();
+                try
+                {
+                    for (int i = 0; i < FontFamilyComboBox.Items.Count; i++)
+                    {
+                        FontFamily family = FontFamilyComboBox.Items[i] as FontFamily;
+                        if (family.Source.Equals(textBlock.FontFamily.Source))
+                            FontFamilyComboBox.SelectedIndex = i;
+                    }
+                    if (textBlock.Foreground is SolidColorBrush fontBrush)
+                        FontColorPicker.Color = fontBrush.Color;
+                }
+                catch { }
             }
         }
 
@@ -88,7 +103,7 @@ namespace Calculator.Controls
                 try
                 {
                     invoker.FontSize = Convert.ToDouble(FontSizeBox.Text);
-                    invoker.FontFamily = (FontFamily)FontFamilyComboBox.SelectedValue;
+                    invoker.FontFamily = (FontFamily)FontFamilyComboBox.SelectedItem;
                     invoker.Foreground = new SolidColorBrush(FontColorPicker.Color);
                     invoker.Background = new SolidColorBrush(BackgroundColorPicker.Color);
                     invoker.BorderBrush = new SolidColorBrush(BorderColorPicker.Color);
@@ -101,6 +116,26 @@ namespace Calculator.Controls
                 }
                 catch { }
             }
+            else if (textBlock != null)
+            {
+                textBlock.FontSize = Convert.ToDouble(FontSizeBox.Text);
+                textBlock.FontFamily = (FontFamily)FontFamilyComboBox.SelectedItem;
+                try
+                {
+                    textBlock.Foreground = new SolidColorBrush(FontColorPicker.Color);
+                }
+                catch { }
+            }
+        }
+
+        private List<FontFamily> SetComboBoxSource()
+        {
+            List<FontFamily> fonts = new List<FontFamily>();
+            foreach (string fontName in CanvasTextFormat.GetSystemFontFamilies())
+            {
+                fonts.Add(new FontFamily(fontName));
+            }
+            return fonts;
         }
     }
 }
