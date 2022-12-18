@@ -532,20 +532,26 @@ namespace Calculator.Views
                     {
                         TextBlock textBlock = (TextBlock)grid.Children[i];
                         ApplicationDataCompositeValue textBlockSettings = _settingsController.LoadTextBlockSettings(textBlock.Name).Result;
-                        textBlock.FontSize = (double)textBlockSettings["FontSize"];
-                        textBlock.FontFamily = (FontFamily)textBlockSettings["FontFamily"];
-                        textBlock.Foreground = (SolidColorBrush)textBlockSettings["FontColor"];
+                        if (textBlockSettings != null)
+                        {
+                            textBlock.FontSize = (double)textBlockSettings["FontSize"];
+                            textBlock.FontFamily = (FontFamily)textBlockSettings["FontFamily"];
+                            textBlock.Foreground = (SolidColorBrush)textBlockSettings["FontColor"];
+                        }
                     }
                     else if (grid.Children[i].GetType().IsEquivalentTo(typeof(Button)))
                     {
                         Button button = (Button)grid.Children[i];
                         ApplicationDataCompositeValue buttonSettings = _settingsController.LoadButtonSettings(button.Name).Result;
-                        button.FontSize = (double)buttonSettings["FontSize"];
-                        button.FontFamily = (FontFamily)buttonSettings["FontFamily"];
-                        button.Foreground = (SolidColorBrush)buttonSettings["FontColor"];
-                        button.Background = (SolidColorBrush)buttonSettings["BackgroundColor"];
-                        button.BorderBrush = (SolidColorBrush)buttonSettings["BorderColor"];
-                        button.BorderThickness = (Thickness)buttonSettings["BorderThickness"];
+                        if (buttonSettings != null)
+                        {
+                            button.FontSize = (double)buttonSettings["FontSize"];
+                            button.FontFamily = (FontFamily)buttonSettings["FontFamily"];
+                            button.Foreground = (SolidColorBrush)buttonSettings["FontColor"];
+                            button.Background = (SolidColorBrush)buttonSettings["BackgroundColor"];
+                            button.BorderBrush = (SolidColorBrush)buttonSettings["BorderColor"];
+                            button.BorderThickness = (Thickness)buttonSettings["BorderThickness"];
+                        }
                     }
                 }
             }
