@@ -520,7 +520,5 @@ namespace Calculator.Views
         }
 
         #endregion
-
-
     }
 }
