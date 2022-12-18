@@ -9,10 +9,14 @@ namespace Calculator.Controls
 {
     public sealed partial class AppearanceWindowControl : ContentDialog
     {
-        readonly Control invoker;
+        #region Fields
+        readonly Button invoker;
         readonly TextBlock textBlock;
+        readonly SettingsController _settingsController = new SettingsController();
+        #endregion
 
-        public AppearanceWindowControl(Control invoker)
+        #region Constructors
+        public AppearanceWindowControl(Button invoker)
         {
             InitializeComponent();
             this.invoker = invoker;
@@ -31,7 +35,9 @@ namespace Calculator.Controls
             BorderColorPicker.Visibility = Visibility.Collapsed;
             BorderThicknessBox.Visibility = Visibility.Collapsed;
         }
+        #endregion
 
+        #region Button clicks
         private void ContentDialog_PrimaryButtonClick(ContentDialog sender, ContentDialogButtonClickEventArgs args)
         {
             ApplyAppearance();
@@ -41,12 +47,16 @@ namespace Calculator.Controls
         {
             Hide();
         }
+        #endregion
 
+        #region ContentDialog events
         private void ContentDialog_Loaded(object sender, RoutedEventArgs e)
         {
             LoadAppearance();
         }
+        #endregion
 
+        #region Methods
         private void LoadAppearance()
         {
             if (invoker != null)
@@ -113,6 +123,7 @@ namespace Calculator.Controls
                         invoker.BorderThickness = new Thickness(Convert.ToDouble(thicknessValues[0]),
                         Convert.ToDouble(thicknessValues[1]), Convert.ToDouble(thicknessValues[2]), Convert.ToDouble(thicknessValues[3]));
                     }
+                    _settingsController.SaveButtonSettings(invoker);
                 }
                 catch { }
             }
@@ -123,6 +134,7 @@ namespace Calculator.Controls
                 try
                 {
                     textBlock.Foreground = new SolidColorBrush(FontColorPicker.Color);
+                    _settingsController.SaveTextBlockSettings(textBlock);
                 }
                 catch { }
             }
@@ -137,5 +149,6 @@ namespace Calculator.Controls
             }
             return fonts;
         }
+        #endregion
     }
 }
