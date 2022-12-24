@@ -2,11 +2,9 @@
 using System;
 using System.Linq;
 using Windows.ApplicationModel.DataTransfer;
-using Windows.Storage;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
-using Windows.UI.Xaml.Media;
 
 namespace Calculator.Views
 {
@@ -20,6 +18,7 @@ namespace Calculator.Views
         readonly SettingsController _settingsController = new SettingsController();
         Button invokerButton;
         TextBlock invokerTextBlock;
+        bool _BlockOrButton = false;
         #endregion
 
         #region Constructor
@@ -358,21 +357,27 @@ namespace Calculator.Views
         private void Element_RightTapped(object sender, Windows.UI.Xaml.Input.RightTappedRoutedEventArgs e)
         {
             if (sender.GetType() == typeof(Button))
+            {
                 invokerButton = sender as Button;
+                _BlockOrButton = true;
+            }
             else if (sender.GetType() == typeof(TextBlock))
+            {
                 invokerTextBlock = sender as TextBlock;
+                _BlockOrButton = false;
+            }
             FlyoutBase.ShowAttachedFlyout((FrameworkElement)sender);
         }
 
         private async void Appearance_Click(object sender, RoutedEventArgs e)
         {
-            if (invokerButton != null)
+            if (_BlockOrButton)
             {
                 AppearanceWindowControl window = new AppearanceWindowControl(invokerButton);
                 window.XamlRoot = XamlRoot;
                 await window.ShowAsync();
             }
-            else if(invokerTextBlock != null)
+            else if(!_BlockOrButton)
             {
                 AppearanceWindowControl window = new AppearanceWindowControl(invokerTextBlock);
                 window.XamlRoot = XamlRoot;
@@ -522,7 +527,7 @@ namespace Calculator.Views
             }
         }
 
-        private void Page_Loading(FrameworkElement sender, object args)
+        private void Page_Loaded(object sender, RoutedEventArgs e)
         {
             try
             {
@@ -531,27 +536,14 @@ namespace Calculator.Views
                     if (grid.Children[i].GetType().IsEquivalentTo(typeof(TextBlock)))
                     {
                         TextBlock textBlock = (TextBlock)grid.Children[i];
-                        ApplicationDataCompositeValue textBlockSettings = _settingsController.LoadTextBlockSettings(textBlock.Name).Result;
-                        if (textBlockSettings != null)
-                        {
-                            textBlock.FontSize = (double)textBlockSettings["FontSize"];
-                            textBlock.FontFamily = (FontFamily)textBlockSettings["FontFamily"];
-                            textBlock.Foreground = (SolidColorBrush)textBlockSettings["FontColor"];
-                        }
+                        grid.Children[i] = _settingsController.LoadTextBlockSettingsAsync(textBlock.Name).Result;
                     }
-                    else if (grid.Children[i].GetType().IsEquivalentTo(typeof(Button)))
+                }
+                for(int i = 0; i < PanelWithButtons.Children.Count; i++)
+                {
+                    if (PanelWithButtons.Children[i].GetType().IsEquivalentTo(typeof(Button)))
                     {
-                        Button button = (Button)grid.Children[i];
-                        ApplicationDataCompositeValue buttonSettings = _settingsController.LoadButtonSettings(button.Name).Result;
-                        if (buttonSettings != null)
-                        {
-                            button.FontSize = (double)buttonSettings["FontSize"];
-                            button.FontFamily = (FontFamily)buttonSettings["FontFamily"];
-                            button.Foreground = (SolidColorBrush)buttonSettings["FontColor"];
-                            button.Background = (SolidColorBrush)buttonSettings["BackgroundColor"];
-                            button.BorderBrush = (SolidColorBrush)buttonSettings["BorderColor"];
-                            button.BorderThickness = (Thickness)buttonSettings["BorderThickness"];
-                        }
+                        Button button = (Button)PanelWithButtons.Children[i];
                     }
                 }
             }

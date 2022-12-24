@@ -106,7 +106,7 @@ namespace Calculator.Controls
             }
         }
 
-        private void ApplyAppearance()
+        private async void ApplyAppearance()
         {
             if (invoker != null)
             {
@@ -123,7 +123,6 @@ namespace Calculator.Controls
                         invoker.BorderThickness = new Thickness(Convert.ToDouble(thicknessValues[0]),
                         Convert.ToDouble(thicknessValues[1]), Convert.ToDouble(thicknessValues[2]), Convert.ToDouble(thicknessValues[3]));
                     }
-                    _settingsController.SaveButtonSettings(invoker);
                 }
                 catch { }
             }
@@ -134,7 +133,7 @@ namespace Calculator.Controls
                 try
                 {
                     textBlock.Foreground = new SolidColorBrush(FontColorPicker.Color);
-                    _settingsController.SaveTextBlockSettings(textBlock);
+                    await _settingsController.SaveTextBlockSettingsAsync(textBlock);
                 }
                 catch { }
             }

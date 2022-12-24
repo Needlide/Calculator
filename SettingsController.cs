@@ -1,62 +1,93 @@
-﻿using System.Threading.Tasks;
-using Windows.Storage;
+﻿using Newtonsoft.Json;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Text;
+using System.Threading.Tasks;
+using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 
 namespace Calculator
 {
     internal class SettingsController
     {
-        readonly ApplicationDataContainer localSettings = ApplicationData.Current.LocalSettings;
+        #region Fields
+        readonly FileStream _fileStream;
+        long _fileLength = 0;
+        #endregion
+
+        #region Constructor
+        internal SettingsController()
+        {
+            try
+            {
+                FileInfo settingsFile = new FileInfo(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData) + '\\' + "settings.json");
+                _fileStream = new FileStream(settingsFile.FullName, FileMode.OpenOrCreate, FileAccess.ReadWrite, FileShare.None, 131072, false);
+                _fileLength = _fileStream.Length;
+            }
+            catch { }
+        }
+        #endregion
 
         #region TextBlock settings operations
-        internal Task SaveTextBlockSettings(TextBlock textBlock)
+        internal async Task SaveTextBlockSettingsAsync(TextBlock textBlock)
         {
-            ApplicationDataCompositeValue textBlockSettings = new ApplicationDataCompositeValue()
+            if (_fileStream.CanWrite)
             {
-                ["FontSize"] = textBlock.FontSize,
-                ["FontFamily"] = textBlock.FontFamily,
-                ["FontColor"] = textBlock.Foreground
-            };
-            localSettings.Values[textBlock.Name] = textBlockSettings;
-
-            return Task.CompletedTask;
+                byte[] objectInBytes = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(textBlock));
+                await _fileStream.WriteAsync(objectInBytes, ((int)_fileLength), objectInBytes.Length);
+                await _fileStream.FlushAsync();
+            }
         }
 
-        internal Task<ApplicationDataCompositeValue> LoadTextBlockSettings(string textBlockName)
+        internal async Task<TextBlock> LoadTextBlockSettingsAsync(string textBlockName)
         {
-            return Task<ApplicationDataCompositeValue>.Factory.StartNew(() => GetTextBlockSettings(textBlockName));
-        }
+            try
+            {
+                List<FrameworkElement> textBlocks = new List<FrameworkElement>();
+                byte[] objectInBytes = new byte[_fileStream.Length];
 
-        private ApplicationDataCompositeValue GetTextBlockSettings(string textBlockName)
-        {
-            return (ApplicationDataCompositeValue)localSettings.Values[textBlockName];
+                if (_fileStream.CanRead && _fileStream.Length > 0)
+                {
+                    _fileStream.Read(objectInBytes, 0, ((int)_fileStream.Length)/*maybe zero cause _fileStream doesn't have inside stream from file*/);
+                    await Task.Run(() => { textBlocks = JsonConvert.DeserializeObject<List<FrameworkElement>>(Encoding.UTF8.GetString(objectInBytes)); });
+                }
+
+                await _fileStream.FlushAsync();
+                return (TextBlock)Task.FromResult(textBlocks.Find(x => x.Name.Equals(textBlockName))).Result;
+            }
+            catch { return Task.FromResult(new TextBlock()).Result; }
         }
         #endregion
 
         #region Button settings operations
-        internal Task SaveButtonSettings(Button button)
+        internal async Task SaveButtonSettingsAsync(Button button)
         {
-            ApplicationDataCompositeValue buttonSettings = new ApplicationDataCompositeValue()
+            if(_fileStream.CanWrite)
             {
-                ["FontSize"] = button.FontSize,
-                ["FontFamily"] = button.FontFamily,
-                ["FontColor"] = button.Foreground,
-                ["BackgroundColor"] = button.Background,
-                ["BorderColor"] = button.BorderBrush,
-                ["BorderThickness"] = button.BorderThickness
-            };
-            localSettings.Values[button.Name] = buttonSettings;
-            return Task.CompletedTask;
+                byte[] objectInBytes = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(button));
+                await _fileStream.WriteAsync(objectInBytes, ((int)_fileLength), objectInBytes.Length);
+                await _fileStream.FlushAsync();
+            }
         }
 
-        internal Task<ApplicationDataCompositeValue> LoadButtonSettings(string buttonName)
+        internal async Task<Button> LoadButtonSettingsAsync(string buttonName)
         {
-            return Task<ApplicationDataCompositeValue>.Factory.StartNew(() => GetButtonSettings(buttonName));
-        }
+            try
+            {
+                List<FrameworkElement> buttons = new List<FrameworkElement>();
+                byte[] objectInBytes = new byte[_fileLength];
 
-        private ApplicationDataCompositeValue GetButtonSettings(string buttonName)
-        {
-            return (ApplicationDataCompositeValue)localSettings.Values[buttonName];
+                if(_fileStream.CanRead && _fileStream.Length > 0)
+                {
+                    _fileStream.Read(objectInBytes, 0, ((int)_fileStream.Length));
+                    await Task.Run(() => { buttons = JsonConvert.DeserializeObject<List<FrameworkElement>>(Encoding.UTF8.GetString(objectInBytes)); });
+                }
+
+                await _fileStream.FlushAsync();
+                return (Button)Task.FromResult(buttons.Find(x => x.Name.Equals(buttonName))).Result;
+            }
+            catch { return Task.FromResult(new Button()).Result; }
         }
         #endregion
     }
